@@ -1,0 +1,43 @@
+version: '3.5'
+
+services:
+  openmapper-service:
+    image: node
+    container_name: openmapper-service
+    command: npm run dev
+
+    volumes:
+      - "./backend:/usr/app"
+      
+    networks:
+      - traefik
+
+    labels:
+      traefik.enable: true
+      traefik.backend: "openmapper-service"
+      traefik.frontend.rule: "Host:openmapper.dev;PathPrefix:/api"
+
+    expose:
+      - 80
+  
+  openmapper-client:
+    image: nginx
+    container_name: openmapper-client
+    volumes:
+      - "./client/dist/:/usr/share/nginx/html"
+
+    networks: 
+      - traefik
+
+    labels:
+      traefik.enable: true
+      traefik.docker.network: "traefik"
+      traefik.frontend.rule: "Host:openmapper.dev"
+
+    expose:
+      - 80
+
+networks: 
+  traefik:
+    external: false
+    name: traefik

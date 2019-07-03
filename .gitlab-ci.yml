@@ -1,0 +1,20 @@
+image: node:latest
+
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - backend/node_modules/
+  - client/node_modules/
+
+before_script:
+  - npm run install:all
+
+test:
+  script:
+    - npm run test:all
+
+build:
+  script:
+    - npm run build
+
